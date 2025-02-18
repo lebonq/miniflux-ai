@@ -8,7 +8,7 @@ import traceback
 import miniflux
 from common.config import Config
 from core import process_entry
-from myapp import app
+from miniflux_ai import app
 
 config = Config()
 miniflux_client = miniflux.Client(config.miniflux_base_url, api_key=config.miniflux_api_key)

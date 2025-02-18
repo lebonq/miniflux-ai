@@ -1,12 +1,13 @@
 import concurrent.futures
 import time
 import traceback
+import sqlite3
 
 import miniflux
 import schedule
 
 from common import Config, logger
-from myapp import app
+from miniflux_ai import app
 from core import fetch_unread_entries, generate_daily_news
 
 config = Config()
@@ -45,6 +46,25 @@ def my_flask():
     app.run(host='0.0.0.0', port=80)
 
 if __name__ == '__main__':
+    
+    conn = sqlite3.connect('miniflux-ai.db')
+    logger.info('Connected to database')
+    
+    #If database empty create table for entries : date,title,id,summary
+    if conn.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='entries';").fetchone()[0] == 0:
+        logger.info('Creating table because it does not exist')
+        conn.execute('''CREATE TABLE IF NOT EXISTS entries (
+                        id INTEGER PRIMARY KEY,
+                        category_id INTEGER NOT NULL,
+                        date TEXT NOT NULL,
+                        title TEXT NOT NULL,
+                        site_url TEXT NOT NULL,
+                        content TEXT NOT NULL,
+                        summary TEXT
+                    );''')
+        conn.commit()
+    conn.close()
+    
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
         executor.submit(my_flask)
         executor.submit(my_schedule)

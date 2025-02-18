@@ -36,3 +36,8 @@ services:
         TZ: Asia/Shanghai
     volumes:
         - ./config.yml:/app/config.yml
+        - miniflux-ai:/app
+
+volumes:
+  miniflux-db:
+  miniflux-ai:
