@@ -4,6 +4,8 @@ Main differences :
 
 - Use of SQlite3 for persistant storage
 
+For now this fork is not stable and should not be used in production.
+
 # miniflux-ai
 
 Miniflux with AI
