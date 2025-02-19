@@ -59,7 +59,6 @@ if __name__ == '__main__':
                         date TEXT NOT NULL,
                         title TEXT NOT NULL,
                         site_url TEXT NOT NULL,
-                        content TEXT NOT NULL,
                         summary TEXT
                     );''')
         conn.commit()

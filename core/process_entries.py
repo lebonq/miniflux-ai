@@ -29,6 +29,7 @@ def process_entry(miniflux_client, entry):
     conn = sqlite3.connect('miniflux-ai.db')      
     cursor = conn.cursor()
     
+    content = miniflux_client.get_entry(entry['id'])['content']
 
     for agent in config.agents.items():
         # filter, if AI is not generating, and in allow_list, or not in deny_list
@@ -36,12 +37,12 @@ def process_entry(miniflux_client, entry):
             if '${content}' in agent[1]['prompt']:
                 messages = [
                     {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": agent[1]['prompt'].replace('${content}', md(entry['content']))}
+                    {"role": "user", "content": agent[1]['prompt'].replace('${content}', md(content))}
                 ]
             else:
                 messages = [
                     {"role": "system", "content": agent[1]['prompt']},
-                    {"role": "user", "content": "The following is the input content:\n---\n " + md(entry['content'])}
+                    {"role": "user", "content": "The following is the input content:\n---\n " + md(content)}
                 ]
 
             completion = llm_client.chat.completions.create(
@@ -72,6 +73,6 @@ def process_entry(miniflux_client, entry):
             logger.info(f"agents:{agent[0]} - feed_title:{entry['title']} - id:{entry['id']}  not summarised : already done")
 
     if len(llm_result) > 0:
-        dict_result = miniflux_client.update_entry(entry['id'], content= llm_result + entry['content'])
+        dict_result = miniflux_client.update_entry(entry['id'], content= llm_result + content)
         
     conn.close()

@@ -23,15 +23,14 @@ def fetch_unread_entries(config, miniflux_client):
         title = entry['title']
         site_url = entry['feed']['site_url']
         category_id = entry['feed']['category']['id']
-        content = entry['content']
         
         cursor.execute('SELECT 1 FROM entries WHERE id = ?', (id_entry,))
         exist = cursor.fetchone()
         
         if(not exist):
             cursor.execute('''
-                INSERT INTO entries (id, category_id, date, title, site_url, content, summary) VALUES (?, ?, ?, ?, ?, ?, NULL)
-            ''', (id_entry, category_id, datetime, title, site_url, content))
+                INSERT INTO entries (id, category_id, date, title, site_url, summary) VALUES (?, ?, ?, ?, ?, NULL)
+            ''', (id_entry, category_id, datetime, title, site_url))
             conn.commit()
             logger.info('Inserted entry with id: ' + str(id_entry))
         else:
