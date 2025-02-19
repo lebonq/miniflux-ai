@@ -40,8 +40,6 @@ def fetch_unread_entries(config, miniflux_client):
 
     cursor.execute('SELECT * FROM entries WHERE summary IS NULL')
     entries_not_summarised = cursor.fetchall()
-    
-    logger.info(entries_not_summarised[6]['site_url'])
             
     conn.commit()
     conn.close()
