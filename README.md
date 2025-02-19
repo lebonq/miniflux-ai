@@ -1,4 +1,11 @@
+# **This is a fork of [miniflux-AI](https://github.com/Qetesh/miniflux-ai) devlopped by [Qetesh](https://github.com/Qetesh)**
+
+Main differences :
+
+- Use of SQlite3 for persistant storage
+
 # miniflux-ai
+
 Miniflux with AI
 
 This project integrates with Miniflux to fetch RSS feed content via API or webhook. It then utilizes large language models (e.g., Ollama, ChatGPT, LLaMA, Gemini) to generate summaries, translations, and AI-driven news insights.
@@ -18,21 +25,21 @@ This project integrates with Miniflux to fetch RSS feed content via API or webho
     </td>
     <td>
       AI News
-    </td> 
+    </td>
   </tr>
   <tr>
-    <td> 
+    <td>
       <picture>
         <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/11c208d9-816a-4c8c-bc00-2f780529e58d">
         <source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/c97e2774-ec10-4acb-bef7-25cf8d43da15">
-        <img alt="miniflux AI summaries translations" src="https://github.com/user-attachments/assets/c97e2774-ec10-4acb-bef7-25cf8d43da15" width="400" > 
+        <img alt="miniflux AI summaries translations" src="https://github.com/user-attachments/assets/c97e2774-ec10-4acb-bef7-25cf8d43da15" width="400" >
       </picture>
     </td>
-    <td> 
+    <td>
       <picture>
         <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/b40f5bdd-d265-4beb-a14c-d39d6624760b">
         <source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/e5985025-15f3-43b0-982b-422575962783">
-        <img alt="miniflux AI summaries translations" src="https://github.com/user-attachments/assets/e5985025-15f3-43b0-982b-422575962783" width="400" > 
+        <img alt="miniflux AI summaries translations" src="https://github.com/user-attachments/assets/e5985025-15f3-43b0-982b-422575962783" width="400" >
       </picture>
     </td>
   </tr>
@@ -50,7 +57,7 @@ This project integrates with Miniflux to fetch RSS feed content via API or webho
 The repository includes a template configuration file: `config.sample.yml`. Modify the `config.yml` to set up:
 
 > If using a webhook, enter the URL in Settings > Integrations > Webhook > Webhook URL.
-> 
+>
 > If deploying in a container alongside Miniflux, use the following URL:
 > http://miniflux_ai/api/miniflux-ai.
 
@@ -58,7 +65,6 @@ The repository includes a template configuration file: `config.sample.yml`. Modi
 - **LLM**: Model settings, API key, and endpoint.Add timeout, max_workers parameters due to multithreading
 - **AI News**: Schedule and prompts for daily news generation
 - **Agents**: Define each agent's prompt, allow_list/deny_list filters, and output style（`style_block` parameter controls whether the output is formatted as a code block in Markdown）.
-
 
 ## Docker Setup
 
@@ -77,6 +83,7 @@ services:
         volumes:
             - ./config.yml:/app/config.yml
 ```
+
 Refer to `config.sample.*.yml`, create `config.yml`
 To start the services:
 
@@ -91,19 +98,23 @@ docker-compose up -d
 3. The script will fetch unread RSS entries, process them with the LLM, and update the content in Miniflux.
 
 ## Roadmap
+
 - [x] Add daily summary(by title, Summary of existing AI)
-  - [x] Add Morning and Evening News（e.g. 9/24: AI Morning News, 9/24: AI Evening News）
-  - [x] Add timed summary
+- [x] Add Morning and Evening News（e.g. 9/24: AI Morning News, 9/24: AI Evening News）
+- [x] Add timed summary
 
 ## FAQ
+
 <details>
 <summary>If the formatting of summary content is incorrect, add the following code in Settings > Custom CSS:</summary>
-```
+
+```css
 pre code {
     white-space: pre-wrap;
     word-wrap: break-word;
 }
 ```
+
 </details>
 
 ## Contributing
@@ -113,7 +124,6 @@ Feel free to fork this repository and submit pull requests. Contributions and is
 <a href="https://github.com/Qetesh/miniflux-ai/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Qetesh/miniflux-ai" />
 </a>
-
 
 ## Star History
 
