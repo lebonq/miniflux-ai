@@ -1,5 +1,6 @@
 import json
 import time
+from datetime import datetime, timedelta
 from openai import OpenAI
 
 from common import logger
@@ -11,14 +12,35 @@ llm_client = OpenAI(base_url=config.llm_base_url, api_key=config.llm_api_key)
 
 def generate_daily_news(miniflux_client):
     logger.info('Generating daily news')
-    # fetch entries.json
-    try:
-        with open('entries.json', 'r') as f:
-            entries = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        return []
+    
+    logger.info('Connection to database')
+    conn = sqlite3.connect('miniflux-ai.db')     
+    conn.row_factory = sqlite3.Row 
+    logger.info('Connected to database')
+    cursor = conn.cursor()
+    
+    
+    # Calculate the time 12 hours ago
+    time_12_hours_ago = datetime.now() - timedelta(hours=12)
 
-    contents = '\n'.join([i['content'] for i in entries])
+    # Format the time as a string in the same format as the datetime column
+    time_12_hours_ago_str = time_12_hours_ago.strftime('%Y-%m-%d %H:%M:%S')
+
+    # Select articles with a summary and dated in the past 12 hours
+    cursor.execute('''
+        SELECT * FROM entries
+        WHERE summary IS NOT NULL AND datetime >= ?
+    ''', (time_12_hours_ago_str,))
+
+    # Fetch all matching rows
+    rows = cursor.fetchall()
+    entries = cursor.fetchall()
+    
+    logger.info(entries[0])
+    
+    exit(0)
+
+    contents = '\n'.join([miniflux_client.get_entry(i['id'])['content'] for i in entries])
     # greeting
     greeting = get_ai_result(config.ai_news_prompts['greeting'], time.strftime('%B %d, %Y at %I:%M %p'))
     # summary_block
@@ -29,10 +51,6 @@ def generate_daily_news(miniflux_client):
     response_content = greeting + '\n\n### 🌐Summary\n' + summary + '\n\n### 📝News\n' + summary_block
 
     logger.info('Generated daily news: ' + response_content)
-
-    # empty entries.json
-    with open('entries.json', 'w') as f:
-        json.dump([], f, indent=4, ensure_ascii=False)
 
     with open('ai_news.json', 'w') as f:
         json.dump(response_content, f, indent=4, ensure_ascii=False)

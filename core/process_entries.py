@@ -72,7 +72,7 @@ def process_entry(miniflux_client, entry):
         else:
             logger.info(f"agents:{agent[0]} - feed_title:{entry['title']} - id:{entry['id']}  not summarised : already done")
 
-    if len(llm_result) > 0:
-        dict_result = miniflux_client.update_entry(entry['id'], content= llm_result + content)
+    #if len(llm_result) > 0:
+        #dict_result = miniflux_client.update_entry(entry['id'], content= llm_result + content)
         
     conn.close()

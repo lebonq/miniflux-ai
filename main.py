@@ -24,6 +24,7 @@ while True:
 def my_schedule():
     interval = 15 if config.miniflux_webhook_secret else 1
     schedule.every(interval).minutes.do(fetch_unread_entries, config, miniflux_client)
+    schedule.every(interval).minutes.do(generate_daily_news, miniflux_client)
     schedule.run_all()
 
     if config.ai_news_schedule:
@@ -43,7 +44,7 @@ def my_schedule():
 
 def my_flask():
     logger.info('Starting API')
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=8080)
 
 if __name__ == '__main__':
     
